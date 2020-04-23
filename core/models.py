@@ -1,6 +1,6 @@
 from django.db import models
 
-class VendingItems(models.Model):
+class VendingItems(models.Model):                             #store data of items in vending machine
     coke_price = models.PositiveIntegerField(default=25)
     pepsi_price = models.PositiveIntegerField(default=35)
     soda_price = models.PositiveIntegerField(default=45)
@@ -10,7 +10,7 @@ class VendingItems(models.Model):
 
 
 
-class VendingMachineMoney(models.Model):
+class VendingMachineMoney(models.Model):                             #store data of money in vending machine
     m_penny = models.PositiveIntegerField(default=0)
     m_nickel = models.PositiveIntegerField(default=0)
     m_dime = models.PositiveIntegerField(default=0)
@@ -19,7 +19,7 @@ class VendingMachineMoney(models.Model):
 
 
 
-class UserMoney(models.Model):
+class UserMoney(models.Model):                             #store data of user's money for each transaction
     u_penny = models.PositiveIntegerField(default=0)
     u_nickel = models.PositiveIntegerField(default=0)
     u_dime = models.PositiveIntegerField(default=0)

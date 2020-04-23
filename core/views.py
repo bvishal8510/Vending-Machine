@@ -6,7 +6,7 @@ from django.contrib import messages
 from django.urls import reverse_lazy
 
 
-class DisplayVendingMachine(View):
+class DisplayVendingMachine(View):                   #displays vending machine and various messages of Completion and failure
     template_name = 'core/vending_machine.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -25,7 +25,7 @@ class DisplayVendingMachine(View):
         return render(self.request, self.template_name, {"data":vending_machine_data})
 
 
-class SaveValue(View):
+class SaveValue(View):                   #saves the coins entered by user in database using ajax call
 
     def get(self, request):
         num = request.GET['num']
@@ -47,7 +47,7 @@ class SaveValue(View):
         return JsonResponse({})
 
 
-class CancelTransaction(View):
+class CancelTransaction(View):                   #delete user details and displays message of cancellation 
     
     def get(self, request, *args, **kwargs):
         user_money = list(UserMoney.objects.all())[0]
@@ -58,7 +58,7 @@ class CancelTransaction(View):
         return redirect(reverse_lazy('display_machine'))
 
 
-class CommitTransaction(View):
+class CommitTransaction(View):                   #checks for various conditions of failure and completes the order 
     
     def get(self, request, price, *args, **kwargs):
         vending_machine_data = VendingItems.objects.get(pk=1)
@@ -75,7 +75,8 @@ class CommitTransaction(View):
                 str(user_money.u_dime)+" dime, "+str(user_money.u_quater)+" quater"
             messages.add_message(request, messages.INFO, to_message)
             UserMoney.objects.all().delete()
-            return redirect(reverse_lazy('display_machine'))                        
+            return redirect(reverse_lazy('display_machine'))     
+                               
         total_money = 1*user_money.u_penny + 5*user_money.u_nickel + 10*user_money.u_dime + 25*user_money.u_quater        
         change = total_money - price        
         quater_change = int(change/25) if int(change/25)<(vending_machine_money.m_quater + user_money.u_quater)\

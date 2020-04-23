@@ -3,7 +3,7 @@ from core.models import VendingItems, VendingMachineMoney, UserMoney
 from core.reset import reset_function
 # Register your models here.
 
-class ResetAdmin(admin.ModelAdmin):
+class ResetAdmin(admin.ModelAdmin):          #implements reset feature in admin
     actions = [reset_function]
 
     class Meta:

@@ -6,20 +6,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Vending Machine</title>
+    <script src="path/to/sweet-alert.min.js"></script>
 </head>
 
 <body>
-    <div style="margin: 10%; border: thick solid #000000; width: 300px; height: 400px;">
+        
+    <div style="margin-left: 10%; margin-top: 10%; border: thick solid #000000; width: 300px; height: 400px;">
         <div style="text-align: center;">
-            <input style="margin-top:10%" placeholder="Enter coin value">
-            <button >Enter</button>
+            <input style="margin-top:10%;" id="value-entered" placeholder="Enter coin value">
+            <button onclick="valueEvaluation()">Enter</button>
         </div>
-        <div style="pos"> 
-            <button>Coke - {{ data.coke_price }} Rs</button>
-            <button>Pepsi - {{ data.pepsi_price }} Rs</button>
-            <button>Soda - {{ data.soda_price }} Rs</button>
+        <div style="text-align: center;">
+            <br>
+            <h4 style="display: inline;">Total Sum = </h4><h4 id="entered_sum" style="display: inline;">0</h4><br>
+            <h4 id="wrong_message" style="display: none; color: red;"></h4>
+            <br>
+        </div>
+        
+        <div style="margin-left: 5%;">
+            <button id="button{{data.coke_price}}" onclick="confirmFunction({{ data.coke_price }})" href="{% url "commit" data.coke_price %}">Coke - {{ data.coke_price }} Rs - {{ data.coke_quantity }} remains</button><br><br>
+            <button id="button{{data.pepsi_price}}" onclick="confirmFunction({{ data.pepsi_price }})" href="{% url "commit" data.pepsi_price %}">Pepsi - {{ data.pepsi_price }} Rs - {{ data.pepsi_quantity }} remains</button><br><br>
+            <button id="button{{data.soda_price}}" onclick="confirmFunction({{ data.soda_price }})" href="{% url "commit" data.soda_price %}">Soda - {{ data.soda_price }} Rs - {{ data.soda_quantity }} remains</button><br><br>
         </div>
     </div>
+    <div style="width: 100%; text-align: center;">
+    {% for message in messages %}
+        <span style="color: green">{{ message }}</span>
+    {% endfor %}
+    </div>
+    <div style="width: 100%; text-align: center;">
+        <div id="confirm_button" style="display: none; height: 50px; width: 100px; float: center; ">
+            <p style="color: black;">
+                Are you sure you want to complete the transaction?
+            </p>
+            <button class="deletenow" img_data="{{ obj.pk }}" user="{{ username }}">Yes</button>
+            <button onclick="alert1()">No</button>
+        </div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
         integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
         crossorigin="anonymous"></script>
@@ -31,6 +56,52 @@
         crossorigin="anonymous"></script>
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.3.1.min.js"></script>
     <script>$(document).ready(function () { $('body').bootstrapMaterialDesign });</script>
+    <script>
+        function valueEvaluation(){
+            var num = document.getElementById('value-entered').value;
+            if(num!=="1" && num!=="5" && num!=="10" && num!=="25")
+            {   document.getElementById('wrong_message').innerHTML="INVALID ENTRY";
+                document.getElementById('wrong_message').style.display="block";
+                setTimeout(function() {
+                    document.getElementById('wrong_message').style.display = "none";
+                }, 2000);
+            }
+            else{
+                var sum = document.getElementById('entered_sum').innerHTML;
+                sum = Number(sum) + Number(num);
+                document.getElementById('entered_sum').innerHTML=sum;
+                $.ajax({
+                    url: '{% url 'save_value' %}',
+                    data: {
+                        'num': num,
+                    },
+                    dataType: 'json',
+                    success: function () {
+                    }
+                });
+            }
+        }
+
+        function confirmFunction(price)
+        {
+            console.log(price);
+            var sum = document.getElementById('entered_sum').innerHTML;
+            if(Number(sum) < price)
+            {
+                {   document.getElementById('wrong_message').innerHTML="ENTER MORE MONEY";
+                document.getElementById('wrong_message').style.display="block";
+                setTimeout(function() {
+                    document.getElementById('wrong_message').style.display = "none";
+                }, 2000);
+                }
+            }
+            else
+            {
+                document.getElementById('confirm_button').style.display="block";
+            }
+        }
+
+    </script>
 
 </body>
 

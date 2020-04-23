@@ -3,4 +3,7 @@ from . import views
 
 urlpatterns = [
     path('', views.DisplayVendingMachine.as_view(), name='display_machine'),
+    path('save', views.SaveValue.as_view(), name='save_value'),
+    path('commit/<int:price>', views.CommitTransaction.as_view(), name='commit'),
+    path('cancel', views.CancelTransaction.as_view(), name='cancel'),
 ]

@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect, reverse
-from django.views import generic
+from django.views import generic, View
+from django.http import HttpResponse, JsonResponse
 from core.models import VendingItems, VendingMachineMoney, UserMoney
 
 
-class DisplayVendingMachine(generic.DetailView):
+class DisplayVendingMachine(View):
     template_name = 'core/vending_machine.html'
 
     def dispatch(self, request, *args, **kwargs):
@@ -20,3 +21,40 @@ class DisplayVendingMachine(generic.DetailView):
     def get(self, request, *args, **kwargs):
         vending_machine_data = VendingItems.objects.get(pk=1)
         return render(self.request, self.template_name, {"data":vending_machine_data})
+
+
+class SaveValue(View):
+
+    def get(self, request):
+        num = request.GET['num']
+        user_money = list(UserMoney.objects.all())[0]
+        pk=user_money.pk
+        penny_count = user_money.u_penny
+        nickel_count = user_money.u_nickel
+        dime_count = user_money.u_dime
+        quater_count = user_money.u_quater
+        if(int(num)==1):
+            penny_count += 1
+        elif(int(num)==5):
+            nickel_count += 1
+        elif(int(num)==10):
+            dime_count += 1
+        else:
+            quater_count += 1
+        UserMoney.objects.filter(pk=pk).update(u_penny=penny_count, u_nickel=nickel_count, u_dime=dime_count, u_quater=quater_count)
+        return JsonResponse({})
+
+class CommitTransaction(View):
+    
+    def get(self, request, price, *args, **kwargs):
+        print(price)
+        vending_machine_data = VendingItems.objects.get(pk=1)
+        # return render(self.request, self.template_name, {"data":vending_machine_data})
+
+
+class CancelTransaction(View):
+    
+    def get(self, request, price, *args, **kwargs):
+        UserMoney.objects.all().delete()
+        # vending_machine_data = VendingItems.objects.get(pk=1)
+        # return render(self.request, self.template_name, {"data":vending_machine_data})

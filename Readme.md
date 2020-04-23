@@ -7,3 +7,4 @@ Features:-
 4. completes the order and gives back the change
 5. Allows the user to cancel the transaction
 6. Machine Reset functionality is provided in the admin panel
+7. Admin can update the itmes present in vending machine and other details.

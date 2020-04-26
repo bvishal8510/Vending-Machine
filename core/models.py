@@ -9,6 +9,11 @@ class VendingItems(models.Model):                             #store data of ite
     soda_quantity = models.PositiveIntegerField(default=0)
 
 
+class VendingItemsNew(models.Model):
+    item_name = models.CharField(blank=False, unique=True, max_length=200)
+    item_price = models.PositiveIntegerField()
+    item_quantity = models.PositiveIntegerField()
+
 
 class VendingMachineMoney(models.Model):                             #store data of money in vending machine
     m_penny = models.PositiveIntegerField(default=0)
@@ -17,7 +22,9 @@ class VendingMachineMoney(models.Model):                             #store data
     m_quater = models.PositiveIntegerField(default=0)
     
 
-
+class UserDetails(models.Model):
+    item_name = models.ForeignKey(VendingItemsNew, on_delete=models.CASCADE)
+    time_of_purchase = models.DateTimeField()
 
 class UserMoney(models.Model):                             #store data of user's money for each transaction
     u_penny = models.PositiveIntegerField(default=0)
